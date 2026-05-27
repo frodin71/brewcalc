@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useUnits } from '../context/AppContext'
+import NumInput from './NumInput'
 
 const SUGAR_TYPES = [
   { name: 'Dextrosa (Azúcar de maíz)',    factor: 4.5  },
@@ -70,22 +71,18 @@ export default function CarbonationCalc() {
         <div className="form-row-2">
           <div className="form-group">
             <label className="form-label">Volumen de cerveza (L)</label>
-            <input
-              type="number"
-              className="form-input"
+            <NumInput
               value={volume}
-              min="1" max="1000"
-              onChange={e => setVolume(Math.max(1, parseFloat(e.target.value) || 20))}
+              min={1} max={1000}
+              onChange={setVolume}
             />
           </div>
           <div className="form-group">
             <label className="form-label">Temperatura al embotellar (°C)</label>
-            <input
-              type="number"
-              className="form-input"
+            <NumInput
               value={temp}
-              min="0" max="30"
-              onChange={e => setTemp(Math.min(30, Math.max(0, parseFloat(e.target.value) || 20)))}
+              min={0} max={30}
+              onChange={setTemp}
             />
           </div>
         </div>

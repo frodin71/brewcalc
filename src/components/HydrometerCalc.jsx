@@ -39,7 +39,7 @@ export default function HydrometerCalc({ easyMode }) {
       <div className="card">
         <div className="card-title">🌡️ Corregir lectura del densímetro</div>
         <p className="card-desc">
-          El densímetro está calibrado para medir a ~16°C. Si medís el mosto caliente, la lectura está equivocada. Esto la corrige.
+          El densímetro está calibrado para medir a ~16°C. Si mides el mosto caliente, la lectura está equivocada. Esto la corrige.
         </p>
       </div>
 

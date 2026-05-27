@@ -29,7 +29,7 @@ export default function NotesPage({ onClose }) {
         <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <div className="card">
             <p className="card-desc">
-              Anotá ingredientes, parámetros de recetas, observaciones del brew day o cualquier cosa que quieras recordar. Se guarda automáticamente en este dispositivo.
+              Anota ingredientes, parámetros de recetas, observaciones del brew day o cualquier cosa que quieras recordar. Se guarda automáticamente en este dispositivo.
             </p>
           </div>
 

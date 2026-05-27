@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import NumInput from './NumInput'
 
 // Absorción del grano: ~0.8 L/kg
 // Agua de mash = grainKg × ratio
@@ -35,28 +36,30 @@ export default function WaterCalc({ easyMode }) {
       <div className="card">
         <div className="card-title">💧 ¿Cuánta agua necesito?</div>
         <p className="card-desc">
-          Calculá cuánta agua poner en el mash y cuánta para el sparge, considerando que el grano absorbe agua y parte se evapora en el hervido.
+          Calcula cuánta agua poner en el mash y cuánta para el sparge, considerando que el grano absorbe agua y parte se evapora en el hervido.
         </p>
       </div>
 
       <div className="card">
         <div className="easy-step-row"><span className="easy-step">1</span>
-          <strong>¿Cuántos litros de cerveza querés terminar?</strong>
+          <strong>¿Cuántos litros de cerveza quieres terminar?</strong>
         </div>
-        <input type="number" className="form-input"
-          style={{ fontSize: '1.5rem', textAlign: 'center', fontWeight: 700 }}
-          value={postBoil} min="5" max="200"
-          onChange={e => setPostBoil(Math.max(1, parseFloat(e.target.value) || 20))} />
+        <NumInput
+          value={postBoil}
+          min={1} max={200}
+          onChange={setPostBoil}
+        />
       </div>
 
       <div className="card">
         <div className="easy-step-row"><span className="easy-step">2</span>
-          <strong>¿Cuántos kg de grano usás?</strong>
+          <strong>¿Cuántos kg de grano usas?</strong>
         </div>
-        <input type="number" className="form-input"
-          style={{ fontSize: '1.5rem', textAlign: 'center', fontWeight: 700 }}
-          value={grainKg} min="0.5" max="50" step="0.5"
-          onChange={e => setGrainKg(Math.max(0.5, parseFloat(e.target.value) || 5))} />
+        <NumInput
+          value={grainKg}
+          min={0.5} max={50}
+          onChange={setGrainKg}
+        />
       </div>
 
       <div className="card">
@@ -110,39 +113,51 @@ export default function WaterCalc({ easyMode }) {
         <div className="form-row-2">
           <div className="form-group">
             <label className="form-label">Volumen final post-hervor (L)</label>
-            <input type="number" className="form-input"
-              value={postBoil} min="1"
-              onChange={e => setPostBoil(Math.max(1, parseFloat(e.target.value) || 20))} />
+            <NumInput
+              value={postBoil}
+              min={1}
+              onChange={setPostBoil}
+            />
           </div>
           <div className="form-group">
             <label className="form-label">Cantidad de grano (kg)</label>
-            <input type="number" className="form-input"
-              value={grainKg} min="0.5" step="0.5"
-              onChange={e => setGrainKg(Math.max(0.5, parseFloat(e.target.value) || 5))} />
+            <NumInput
+              value={grainKg}
+              min={0.5} max={50}
+              onChange={setGrainKg}
+            />
           </div>
           <div className="form-group">
             <label className="form-label">Relación agua/grano (L/kg)</label>
-            <input type="number" className="form-input"
-              value={ratio} min="2" max="6" step="0.5"
-              onChange={e => setRatio(parseFloat(e.target.value) || 3)} />
+            <NumInput
+              value={ratio}
+              min={2} max={6}
+              onChange={setRatio}
+            />
           </div>
           <div className="form-group">
             <label className="form-label">Tiempo de hervido (min)</label>
-            <input type="number" className="form-input"
-              value={boilMin} min="30" max="120" step="15"
-              onChange={e => setBoilMin(parseFloat(e.target.value) || 60)} />
+            <NumInput
+              value={boilMin}
+              min={30} max={120}
+              onChange={setBoilMin}
+            />
           </div>
           <div className="form-group">
             <label className="form-label">Tasa de evaporación (L/hr)</label>
-            <input type="number" className="form-input"
-              value={boilRate} min="1" max="8" step="0.5"
-              onChange={e => setBoilRate(parseFloat(e.target.value) || 3.5)} />
+            <NumInput
+              value={boilRate}
+              min={1} max={8}
+              onChange={setBoilRate}
+            />
           </div>
           <div className="form-group">
             <label className="form-label">Pérdida por trub (L)</label>
-            <input type="number" className="form-input"
-              value={trub} min="0" max="5" step="0.5"
-              onChange={e => setTrub(parseFloat(e.target.value) || 0.5)} />
+            <NumInput
+              value={trub}
+              min={0} max={5}
+              onChange={setTrub}
+            />
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import NumInput from './NumInput'
 
 // CO₂ residual según temperatura
 function residualCO2(tempC) {
@@ -82,13 +83,10 @@ export default function EasyCarbonationCalc() {
           <span className="easy-step">1</span>
           <strong>¿Cuántos litros de cerveza tienes?</strong>
         </div>
-        <input
-          type="number"
-          className="form-input"
-          style={{ fontSize: '1.5rem', textAlign: 'center', fontWeight: 700 }}
+        <NumInput
           value={liters}
-          min="1" max="500"
-          onChange={e => setLiters(Math.max(1, parseFloat(e.target.value) || 20))}
+          min={1} max={500}
+          onChange={setLiters}
         />
       </div>
 

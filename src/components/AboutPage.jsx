@@ -55,7 +55,7 @@ export default function AboutPage({ onClose }) {
           <div className="card">
             <div className="card-title">🔗 Proyecto abierto</div>
             <div className="info-box">
-              El código fuente está disponible en GitHub. Si encontrás un error o querés sugerir una mejora, podés abrir un issue.
+              El código fuente está disponible en GitHub. Si encuentras un error o quieres sugerir una mejora, puedes abrir un issue.
             </div>
             <div style={{ marginTop: '10px', fontSize: '0.82rem', color: 'var(--color-muted)', fontFamily: 'monospace' }}>
               github.com/frodin71/brewcalc

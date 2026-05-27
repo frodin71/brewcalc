@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import NumInput from './NumInput'
 
 // Palmer metric: Strike = (0.41 / ratio_L_kg) × (Tmash - Tgrain) + Tmash
 function strikeTemp(tmash, tgrain, ratio) {
@@ -29,14 +30,14 @@ export default function StrikeWaterCalc({ easyMode }) {
       <div className="card">
         <div className="card-title">🌡️ ¿A qué temperatura calentar el agua?</div>
         <p className="card-desc">
-          Si calentás el agua a la temperatura del mash, al mezclar con el grano frío la temperatura bajará. Esta calculadora dice a cuánto calentar para compensar.
+          Si calientas el agua a la temperatura del mash, al mezclar con el grano frío la temperatura bajará. Esta calculadora dice a cuánto calentar para compensar.
         </p>
       </div>
 
       <div className="card">
         <div className="easy-step-row">
           <span className="easy-step">1</span>
-          <strong>¿A qué temperatura querés hacer el mash?</strong>
+          <strong>¿A qué temperatura quieres hacer el mash?</strong>
         </div>
         <input type="number" className="form-input gravity-input"
           value={tmash} min="60" max="72" step="0.5"
@@ -78,7 +79,7 @@ export default function StrikeWaterCalc({ easyMode }) {
           <div className="easy-result-label">temperatura del agua antes de agregar el grano</div>
         </div>
         <div className="info-box" style={{ marginTop: '12px', textAlign: 'center' }}>
-          Calentá el agua a <strong>{strike.toFixed(1)}°C</strong> y al mezclar con el grano llegarás a <strong>{tmash}°C</strong>
+          Calienta el agua a <strong>{strike.toFixed(1)}°C</strong> y al mezclar con el grano llegarás a <strong>{tmash}°C</strong>
         </div>
       </div>
 
@@ -98,15 +99,19 @@ export default function StrikeWaterCalc({ easyMode }) {
         <div className="form-row-2">
           <div className="form-group">
             <label className="form-label">Temp. objetivo del mash (°C)</label>
-            <input type="number" className="form-input"
-              value={tmash} min="60" max="75" step="0.5"
-              onChange={e => setTmash(parseFloat(e.target.value) || 67)} />
+            <NumInput
+              value={tmash}
+              min={60} max={75}
+              onChange={setTmash}
+            />
           </div>
           <div className="form-group">
             <label className="form-label">Temp. del grano (°C)</label>
-            <input type="number" className="form-input"
-              value={tgrain} min="5" max="30" step="1"
-              onChange={e => setTgrain(parseFloat(e.target.value) || 20)} />
+            <NumInput
+              value={tgrain}
+              min={5} max={30}
+              onChange={setTgrain}
+            />
           </div>
         </div>
 
@@ -121,9 +126,11 @@ export default function StrikeWaterCalc({ easyMode }) {
               </button>
             ))}
           </div>
-          <input type="number" className="form-input"
-            value={ratio} min="2" max="6" step="0.1"
-            onChange={e => { setRatio(parseFloat(e.target.value) || 3); setRatioPreset(-1) }} />
+          <NumInput
+            value={ratio}
+            min={2} max={6}
+            onChange={v => { setRatio(v); setRatioPreset(-1) }}
+          />
         </div>
       </div>
 

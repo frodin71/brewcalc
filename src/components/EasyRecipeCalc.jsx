@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import NumInput from './NumInput'
 
 const STYLES = [
   {
@@ -87,13 +88,10 @@ export default function EasyRecipeCalc() {
           <span className="easy-step">1</span>
           <strong>¿Cuántos litros quieres hacer?</strong>
         </div>
-        <input
-          type="number"
-          className="form-input"
-          style={{ fontSize: '1.5rem', textAlign: 'center', fontWeight: 700 }}
+        <NumInput
           value={liters}
-          min="5" max="200"
-          onChange={e => setLiters(Math.max(5, parseFloat(e.target.value) || 20))}
+          min={5} max={200}
+          onChange={setLiters}
         />
       </div>
 

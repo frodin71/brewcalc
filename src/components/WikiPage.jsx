@@ -114,7 +114,7 @@ Al final del hervido, enfría el mosto lo más rápido posible a la temperatura 
       },
       {
         title: 'Fermentación',
-        content: `Transferís el mosto frío al fermentador, agregás la levadura (pitching) y cerrás con un airlock (válvula de agua que deja salir CO₂ pero no entra aire).
+        content: `Transfiere el mosto frío al fermentador, agrega la levadura (pitching) y cierra con un airlock (válvula de agua que deja salir CO₂ pero no entra aire).
 
 Fases:
 • Lag (0–12h): la levadura se adapta, no hay actividad visible
@@ -342,7 +342,7 @@ CO₂ residual: toda cerveza tiene CO₂ disuelto naturalmente de la fermentaci�
 Tipos de azúcar más usados:
 • Dextrosa (glucosa/azúcar de maíz): la más popular, fermenta completo, sabor neutro
 • Sacarosa (azúcar de mesa): igual de efectiva, misma cantidad en gramos (~10% menos)
-• DME (extracto seco de malta): necesitás ~20% más, aporta algo de sabor a malta
+• DME (extracto seco de malta): necesitas ~20% más, aporta algo de sabor a malta
 • Miel: fermenta diferente, puede dejar aromas propios
 
 Método de solución:
@@ -510,7 +510,7 @@ export default function WikiPage({ onClose }) {
         </div>
 
         <div className="wiki-intro card">
-          <p>Todo lo que necesitás saber para hacer cerveza en casa. Tocá cualquier tema para expandirlo.</p>
+          <p>Todo lo que necesitas saber para hacer cerveza en casa. Toca cualquier tema para expandirlo.</p>
         </div>
 
         <div className="wiki-sections">

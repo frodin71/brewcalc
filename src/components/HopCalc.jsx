@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import NumInput from './NumInput'
 
 const HOP_VARIETIES = [
   { name: 'Amarillo',          alpha: 9.5  },
@@ -99,22 +100,18 @@ export default function HopCalc() {
         <div className="form-row-2">
           <div className="form-group">
             <label className="form-label">Volumen final (L)</label>
-            <input
-              type="number"
-              className="form-input"
+            <NumInput
               value={batchSize}
-              min="1"
-              onChange={e => setBatchSize(Math.max(1, parseFloat(e.target.value) || 20))}
+              min={1}
+              onChange={setBatchSize}
             />
           </div>
           <div className="form-group">
             <label className="form-label">OG del mosto</label>
-            <input
-              type="number"
-              className="form-input"
+            <NumInput
               value={wortOG}
-              min="1.000" max="1.200" step="0.001"
-              onChange={e => setWortOG(parseFloat(e.target.value) || 1.050)}
+              min={1.000} max={1.200}
+              onChange={setWortOG}
             />
           </div>
         </div>

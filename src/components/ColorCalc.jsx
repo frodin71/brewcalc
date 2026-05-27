@@ -71,7 +71,7 @@ export default function ColorCalc({ easyMode }) {
       <div className="card">
         <div className="card-title">🌈 Color estimado de la cerveza</div>
         {!easyMode && <p className="card-desc">Fórmula Morey. Usa el mismo grain bill de tu receta.</p>}
-        {easyMode  && <p className="card-desc">Ingresá tus maltas y litros para ver de qué color quedará tu cerveza.</p>}
+        {easyMode  && <p className="card-desc">Ingresa tus maltas y litros para ver de qué color quedará tu cerveza.</p>}
       </div>
 
       <div className="card">

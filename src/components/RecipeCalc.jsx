@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useApp } from '../context/AppContext'
+import NumInput from './NumInput'
 
 const GRAIN_TYPES = [
   { name: 'Malta Pale 2-Row',         ppg: 37 },
@@ -110,22 +111,18 @@ export default function RecipeCalc() {
         <div className="form-row-2">
           <div className="form-group">
             <label className="form-label">Volumen final (L)</label>
-            <input
-              type="number"
-              className="form-input"
+            <NumInput
               value={batchSize}
-              min="1" max="500"
-              onChange={e => setBatchSize(Math.max(1, parseFloat(e.target.value) || 20))}
+              min={1} max={500}
+              onChange={setBatchSize}
             />
           </div>
           <div className="form-group">
             <label className="form-label">Eficiencia del mash (%)</label>
-            <input
-              type="number"
-              className="form-input"
+            <NumInput
               value={efficiency}
-              min="0" max="100"
-              onChange={e => setEfficiency(Math.min(100, Math.max(0, parseFloat(e.target.value) || 75)))}
+              min={0} max={100}
+              onChange={setEfficiency}
             />
           </div>
         </div>

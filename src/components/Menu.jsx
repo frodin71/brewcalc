@@ -1,7 +1,10 @@
 import { useEffect } from 'react'
 import { useApp } from '../context/AppContext'
 
-export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, onOpenNotes, onOpenAbout, onOpenRecipes }) {
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
+
+export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, onOpenNotes, onOpenAbout, onOpenRecipes, onOpenIOSTutorial }) {
   const { units, toggleUnits, installPrompt, triggerInstall } = useApp()
 
   useEffect(() => {
@@ -102,6 +105,17 @@ export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, on
                   <div className="menu-wiki-desc">Agregar a la pantalla de inicio</div>
                 </div>
                 <span className="menu-wiki-arrow">↓</span>
+              </button>
+            )}
+
+            {isIOS && !isStandalone && !installPrompt && (
+              <button className="menu-wiki-btn" onClick={() => { onClose(); onOpenIOSTutorial() }}>
+                <span className="menu-wiki-icon">📱</span>
+                <div>
+                  <div className="menu-wiki-label">Instalar en iPhone / iPad</div>
+                  <div className="menu-wiki-desc">Cómo agregar a la pantalla de inicio</div>
+                </div>
+                <span className="menu-wiki-arrow">→</span>
               </button>
             )}
 

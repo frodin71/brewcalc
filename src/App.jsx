@@ -14,6 +14,7 @@ import WikiPage from './components/WikiPage'
 import NotesPage from './components/NotesPage'
 import AboutPage from './components/AboutPage'
 import SavedRecipesPage from './components/SavedRecipesPage'
+import IOSTutorialPage from './components/IOSTutorialPage'
 
 const TABS = [
   { id: 'recipe',      label: 'Receta',   icon: '🌾' },
@@ -27,7 +28,7 @@ function AppInner() {
   const [activeTab, setActiveTab]   = useState('recipe')
   const [menuOpen, setMenuOpen]     = useState(false)
   const [easyMode, setEasyMode]     = useState(false)
-  const [overlay, setOverlay]       = useState(null) // 'wiki' | 'notes' | 'about' | 'recipes'
+  const [overlay, setOverlay]       = useState(null) // 'wiki' | 'notes' | 'about' | 'recipes' | 'ios-tutorial'
 
   const toggleEasy = () => setEasyMode(v => !v)
   const openOverlay  = (name) => setOverlay(name)
@@ -51,16 +52,18 @@ function AppInner() {
         onClose={() => setMenuOpen(false)}
         easyMode={easyMode}
         onToggle={toggleEasy}
-        onOpenWiki={()    => openOverlay('wiki')}
-        onOpenNotes={()   => openOverlay('notes')}
-        onOpenAbout={()   => openOverlay('about')}
-        onOpenRecipes={() => openOverlay('recipes')}
+        onOpenWiki={()       => openOverlay('wiki')}
+        onOpenNotes={()      => openOverlay('notes')}
+        onOpenAbout={()      => openOverlay('about')}
+        onOpenRecipes={()    => openOverlay('recipes')}
+        onOpenIOSTutorial={() => openOverlay('ios-tutorial')}
       />
 
-      {overlay === 'wiki'    && <WikiPage          onClose={closeOverlay} />}
-      {overlay === 'notes'   && <NotesPage         onClose={closeOverlay} />}
-      {overlay === 'about'   && <AboutPage         onClose={closeOverlay} />}
-      {overlay === 'recipes' && <SavedRecipesPage  onClose={closeOverlay} />}
+      {overlay === 'wiki'         && <WikiPage         onClose={closeOverlay} />}
+      {overlay === 'notes'        && <NotesPage        onClose={closeOverlay} />}
+      {overlay === 'about'        && <AboutPage        onClose={closeOverlay} />}
+      {overlay === 'recipes'      && <SavedRecipesPage onClose={closeOverlay} />}
+      {overlay === 'ios-tutorial' && <IOSTutorialPage  onClose={closeOverlay} />}
 
       <main className="app-main">
         {activeTab === 'recipe'      && (easyMode ? <EasyRecipeCalc />      : <RecipeCalc />)}

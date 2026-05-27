@@ -3,6 +3,11 @@ import RecipeCalc from './components/RecipeCalc'
 import CarbonationCalc from './components/CarbonationCalc'
 import HopCalc from './components/HopCalc'
 import AbvCalc from './components/AbvCalc'
+import EasyRecipeCalc from './components/EasyRecipeCalc'
+import EasyCarbonationCalc from './components/EasyCarbonationCalc'
+import EasyHopCalc from './components/EasyHopCalc'
+import EasyAbvCalc from './components/EasyAbvCalc'
+import Menu from './components/Menu'
 
 const TABS = [
   { id: 'recipe',      label: 'Receta',       icon: '🌾' },
@@ -13,6 +18,10 @@ const TABS = [
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('recipe')
+  const [menuOpen, setMenuOpen]   = useState(false)
+  const [easyMode, setEasyMode]   = useState(false)
+
+  const toggleEasy = () => setEasyMode(v => !v)
 
   return (
     <div className="app">
@@ -20,15 +29,29 @@ export default function App() {
         <span className="header-icon">🍺</span>
         <div className="header-text">
           <h1>BrewCalc</h1>
-          <p>Calculadora de cerveza artesanal</p>
+          <p>{easyMode ? '🌱 Modo Fácil' : '⚗️ Modo Avanzado'}</p>
         </div>
+        <button
+          className="hamburger-btn"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Menú"
+        >
+          <span /><span /><span />
+        </button>
       </header>
 
+      <Menu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        easyMode={easyMode}
+        onToggle={toggleEasy}
+      />
+
       <main className="app-main">
-        {activeTab === 'recipe'      && <RecipeCalc />}
-        {activeTab === 'abv'         && <AbvCalc />}
-        {activeTab === 'carbonation' && <CarbonationCalc />}
-        {activeTab === 'hops'        && <HopCalc />}
+        {activeTab === 'recipe'      && (easyMode ? <EasyRecipeCalc />      : <RecipeCalc />)}
+        {activeTab === 'abv'         && (easyMode ? <EasyAbvCalc />         : <AbvCalc />)}
+        {activeTab === 'carbonation' && (easyMode ? <EasyCarbonationCalc /> : <CarbonationCalc />)}
+        {activeTab === 'hops'        && (easyMode ? <EasyHopCalc />         : <HopCalc />)}
       </main>
 
       <nav className="bottom-nav">

@@ -9,12 +9,14 @@ import EasyHopCalc from './components/EasyHopCalc'
 import EasyAbvCalc from './components/EasyAbvCalc'
 import Menu from './components/Menu'
 import WikiPage from './components/WikiPage'
+import MoreCalcs from './components/MoreCalcs'
 
 const TABS = [
-  { id: 'recipe',      label: 'Receta',       icon: '🌾' },
-  { id: 'abv',         label: 'ABV',           icon: '📊' },
-  { id: 'carbonation', label: 'Carbonatación', icon: '🫧' },
-  { id: 'hops',        label: 'Lúpulos',       icon: '🌿' },
+  { id: 'recipe',      label: 'Receta',    icon: '🌾' },
+  { id: 'abv',         label: 'ABV',       icon: '📊' },
+  { id: 'carbonation', label: 'Carbona.',  icon: '🫧' },
+  { id: 'hops',        label: 'Lúpulos',   icon: '🌿' },
+  { id: 'more',        label: '···',       icon: '⚙️' },
 ]
 
 export default function App() {
@@ -57,6 +59,7 @@ export default function App() {
         {activeTab === 'abv'         && (easyMode ? <EasyAbvCalc />         : <AbvCalc />)}
         {activeTab === 'carbonation' && (easyMode ? <EasyCarbonationCalc /> : <CarbonationCalc />)}
         {activeTab === 'hops'        && (easyMode ? <EasyHopCalc />         : <HopCalc />)}
+        {activeTab === 'more'        && <MoreCalcs easyMode={easyMode} />}
       </main>
 
       <nav className="bottom-nav">

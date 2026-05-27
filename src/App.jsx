@@ -16,7 +16,7 @@ const TABS = [
   { id: 'abv',         label: 'ABV',       icon: '📊' },
   { id: 'carbonation', label: 'Carbona.',  icon: '🫧' },
   { id: 'hops',        label: 'Lúpulos',   icon: '🌿' },
-  { id: 'more',        label: '···',       icon: '⚙️' },
+  { id: 'more',        label: 'Otros',     icon: '⚙️' },
 ]
 
 export default function App() {

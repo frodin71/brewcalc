@@ -1,0 +1,19 @@
+{
+  "name": "BrewCalc — Calculadora de Cerveza",
+  "short_name": "BrewCalc",
+  "description": "Calculadora de cerveza artesanal: OG, ABV, IBU, carbonatación y más",
+  "start_url": "/brewcalc/",
+  "scope": "/brewcalc/",
+  "display": "standalone",
+  "background_color": "#0F0F0F",
+  "theme_color": "#F5A623",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

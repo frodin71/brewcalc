@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useApp } from '../context/AppContext'
 
 const GRAIN_TYPES = [
   { name: 'Malta Pale 2-Row',         ppg: 37 },
@@ -48,9 +49,12 @@ function getOGColor(og) {
 }
 
 export default function RecipeCalc() {
-  const [grains, setGrains]       = useState([{ type: 0, kg: '' }, { type: 5, kg: '' }])
-  const [batchSize, setBatchSize] = useState(20)
+  const { saveRecipe } = useApp()
+  const [grains, setGrains]         = useState([{ type: 0, kg: '' }, { type: 5, kg: '' }])
+  const [batchSize, setBatchSize]   = useState(20)
   const [efficiency, setEfficiency] = useState(75)
+  const [copied, setCopied]         = useState(false)
+  const [savedMsg, setSavedMsg]     = useState(false)
 
   const addGrain    = () => setGrains([...grains, { type: 0, kg: '' }])
   const removeGrain = (i) => setGrains(grains.filter((_, idx) => idx !== i))
@@ -68,6 +72,36 @@ export default function RecipeCalc() {
 
   const ogColor = getOGColor(og)
   const kgPerL  = totalKg > 0 ? (totalKg / batchSize).toFixed(3) : '—'
+
+  const handleCopyList = () => {
+    const lines = [
+      `🍺 LISTA DE COMPRAS — BrewCalc`,
+      `Lote: ${batchSize}L | Eficiencia: ${efficiency}% | OG: ${og.toFixed(3)}`,
+      ``,
+      `MALTAS:`,
+      ...grains
+        .filter(g => parseFloat(g.kg) > 0)
+        .map(g => `  • ${GRAIN_TYPES[g.type].name}: ${g.kg} kg`),
+      `  ─────────────────`,
+      `  TOTAL: ${totalKg.toFixed(2)} kg`,
+    ]
+    navigator.clipboard?.writeText(lines.join('\n'))
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2500)
+  }
+
+  const handleSaveRecipe = () => {
+    saveRecipe({
+      name: `Receta ${batchSize}L — OG ${og.toFixed(3)}`,
+      batchSize, efficiency,
+      og: og.toFixed(3),
+      grains: grains.filter(g => parseFloat(g.kg) > 0).map(g => ({
+        name: GRAIN_TYPES[g.type].name, kg: g.kg,
+      })),
+    })
+    setSavedMsg(true)
+    setTimeout(() => setSavedMsg(false), 2500)
+  }
 
   return (
     <div>
@@ -172,6 +206,19 @@ export default function RecipeCalc() {
           </div>
         )}
       </div>
+
+      {totalKg > 0 && (
+        <div className="card">
+          <div className="action-btn-row">
+            <button className={`action-btn ${copied ? 'success' : ''}`} onClick={handleCopyList}>
+              {copied ? '✓ Copiado' : '📋 Lista de compras'}
+            </button>
+            <button className={`action-btn ${savedMsg ? 'success' : ''}`} onClick={handleSaveRecipe}>
+              {savedMsg ? '✓ Guardada' : '💾 Guardar receta'}
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="card">
         <div className="card-title">📖 Potencial de maltas (PPG)</div>

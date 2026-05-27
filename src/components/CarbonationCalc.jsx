@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useUnits } from '../context/AppContext'
 
 const SUGAR_TYPES = [
   { name: 'Dextrosa (Azúcar de maíz)',    factor: 4.5  },
@@ -38,6 +39,7 @@ function getCO2Desc(co2) {
 }
 
 export default function CarbonationCalc() {
+  const { units, vol, grams } = useUnits()
   const [volume, setVolume]         = useState(20)
   const [temp, setTemp]             = useState(20)
   const [desiredCO2, setDesiredCO2] = useState(2.5)
@@ -143,8 +145,13 @@ export default function CarbonationCalc() {
 
         <div className="result-box green" style={{ marginBottom: '10px', padding: '20px' }}>
           <div className="result-value" style={{ color: '#4CAF50', fontSize: '3rem' }}>
-            {sugarGrams.toFixed(1)} g
+            {grams(sugarGrams)}
           </div>
+          {units === 'imperial' && (
+            <div style={{ fontSize: '0.8rem', color: '#4CAF50', opacity: 0.7 }}>
+              ({sugarGrams.toFixed(1)} g)
+            </div>
+          )}
           <div className="result-unit" style={{ fontSize: '0.9rem', marginTop: '4px' }}>
             {SUGAR_TYPES[sugarType].name}
           </div>

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useUnits } from '../context/AppContext'
 
 // ABV = (OG − FG) × 131.25
 // Atenuación aparente = (OG − FG) / (OG − 1) × 100
@@ -59,6 +60,7 @@ const STYLE_TABLE = [
 ]
 
 export default function AbvCalc() {
+  const { units, temp } = useUnits()
   const [og, setOG] = useState('1.050')
   const [fg, setFG] = useState('1.010')
 
@@ -70,6 +72,7 @@ export default function AbvCalc() {
   const abvColor  = results ? getABVColor(results.abv)          : '#888'
   const attColor  = results ? getAttColor(results.attenuation)  : '#888'
   const attPct    = results ? Math.min(100, results.attenuation) : 0
+  const _ = units // satisface lint — unidades disponibles para futuras extensiones
 
   return (
     <div>

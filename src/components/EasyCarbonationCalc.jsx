@@ -41,8 +41,9 @@ const BOTTLE_SIZES = [
 ]
 
 const TEMP_OPTIONS = [
-  { label: 'Temperatura ambiente (~20°C)', temp: 20 },
-  { label: 'Fermentó en frío (~12°C)',     temp: 12 },
+  { label: 'Temperatura ambiente (~20°C)',        temp: 20 },
+  { label: 'Fermentó en frío (~12°C)',             temp: 12 },
+  { label: 'Mixta: primero ambiente, luego frío', temp: 16 },
 ]
 
 export default function EasyCarbonationCalc() {

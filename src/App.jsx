@@ -8,6 +8,7 @@ import EasyCarbonationCalc from './components/EasyCarbonationCalc'
 import EasyHopCalc from './components/EasyHopCalc'
 import EasyAbvCalc from './components/EasyAbvCalc'
 import Menu from './components/Menu'
+import WikiPage from './components/WikiPage'
 
 const TABS = [
   { id: 'recipe',      label: 'Receta',       icon: '🌾' },
@@ -20,6 +21,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('recipe')
   const [menuOpen, setMenuOpen]   = useState(false)
   const [easyMode, setEasyMode]   = useState(false)
+  const [wikiOpen, setWikiOpen]   = useState(false)
 
   const toggleEasy = () => setEasyMode(v => !v)
 
@@ -45,7 +47,10 @@ export default function App() {
         onClose={() => setMenuOpen(false)}
         easyMode={easyMode}
         onToggle={toggleEasy}
+        onOpenWiki={() => setWikiOpen(true)}
       />
+
+      {wikiOpen && <WikiPage onClose={() => setWikiOpen(false)} />}
 
       <main className="app-main">
         {activeTab === 'recipe'      && (easyMode ? <EasyRecipeCalc />      : <RecipeCalc />)}

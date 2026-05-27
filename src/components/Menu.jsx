@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-export default function Menu({ open, onClose, easyMode, onToggle }) {
+export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki }) {
   useEffect(() => {
     if (open) document.body.style.overflow = 'hidden'
     else document.body.style.overflow = ''
@@ -35,6 +35,20 @@ export default function Menu({ open, onClose, easyMode, onToggle }) {
               <div className="toggle-knob" />
             </div>
           </div>
+        </div>
+
+        <div className="menu-section">
+          <button
+            className="menu-wiki-btn"
+            onClick={() => { onClose(); onOpenWiki() }}
+          >
+            <span className="menu-wiki-icon">📚</span>
+            <div>
+              <div className="menu-wiki-label">Aprende Brewing</div>
+              <div className="menu-wiki-desc">Ingredientes, proceso, siglas y más</div>
+            </div>
+            <span className="menu-wiki-arrow">→</span>
+          </button>
         </div>
 
         <div className="menu-section">

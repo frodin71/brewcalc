@@ -9,6 +9,18 @@ function formatDate(dateStr) {
   return `${d}/${m}/${y}`
 }
 
+// Si el usuario escribe "1052" en vez de "1.052", convertir automáticamente
+function normalizeGravity(val) {
+  const n = parseFloat(String(val).replace(',', '.'))
+  if (isNaN(n)) return null
+  return n > 2 ? n / 1000 : n
+}
+
+function displayGravity(val) {
+  const n = normalizeGravity(val)
+  return n != null ? n.toFixed(3) : null
+}
+
 function DetailView({ entry, onBack, onDelete }) {
   const { updateBrewEntry } = useApp()
 
@@ -18,12 +30,12 @@ function DetailView({ entry, onBack, onDelete }) {
   const [saved,    setSaved]    = useState(false)
 
   function handleUpdate() {
-    const og = parseFloat(ogActual)
-    const fg = parseFloat(fgActual)
+    const og = normalizeGravity(ogActual)
+    const fg = normalizeGravity(fgActual)
     const abvActual = og && fg ? parseFloat(((og - fg) * 131.25).toFixed(2)) : null
     updateBrewEntry(entry.id, {
-      ogActual: og || null,
-      fgActual: fg || null,
+      ogActual: og,
+      fgActual: fg,
       abvActual,
       notes,
     })
@@ -56,13 +68,13 @@ function DetailView({ entry, onBack, onDelete }) {
               {entry.ogTarget && (
                 <div className="info-item">
                   <div className="info-label">OG objetivo</div>
-                  <div className="info-value">{entry.ogTarget.toFixed(3)}</div>
+                  <div className="info-value">{displayGravity(entry.ogTarget)}</div>
                 </div>
               )}
               {entry.fgEst && (
                 <div className="info-item">
                   <div className="info-label">FG estimada</div>
-                  <div className="info-value">{entry.fgEst.toFixed(3)}</div>
+                  <div className="info-value">{displayGravity(entry.fgEst)}</div>
                 </div>
               )}
               {entry.abvEst != null && (
@@ -214,8 +226,8 @@ function DetailView({ entry, onBack, onDelete }) {
                 <label className="form-label">OG real</label>
                 <input
                   className="form-input"
-                  type="number"
-                  step="0.001"
+                  type="text"
+                  inputMode="decimal"
                   placeholder="1.048"
                   value={ogActual}
                   onChange={e => setOgActual(e.target.value)}
@@ -225,8 +237,8 @@ function DetailView({ entry, onBack, onDelete }) {
                 <label className="form-label">FG real</label>
                 <input
                   className="form-input"
-                  type="number"
-                  step="0.001"
+                  type="text"
+                  inputMode="decimal"
                   placeholder="1.010"
                   value={fgActual}
                   onChange={e => setFgActual(e.target.value)}
@@ -234,11 +246,15 @@ function DetailView({ entry, onBack, onDelete }) {
               </div>
             </div>
 
-            {ogActual && fgActual && (
-              <div className="info-box" style={{ marginBottom: '10px', textAlign: 'center' }}>
-                ABV real: <strong>{((parseFloat(ogActual) - parseFloat(fgActual)) * 131.25).toFixed(1)}%</strong>
-              </div>
-            )}
+            {ogActual && fgActual && (() => {
+              const og = normalizeGravity(ogActual)
+              const fg = normalizeGravity(fgActual)
+              return og && fg && og > fg ? (
+                <div className="info-box" style={{ marginBottom: '10px', textAlign: 'center' }}>
+                  ABV real: <strong>{((og - fg) * 131.25).toFixed(1)}%</strong>
+                </div>
+              ) : null
+            })()}
 
             <div className="form-group">
               <label className="form-label">Notas</label>
@@ -303,16 +319,17 @@ export default function BrewLogPage({ onClose }) {
   }
 
   function handleSave() {
-    const ogActual = parseFloat(form.ogActual)
-    const fgActual = parseFloat(form.fgActual)
-    const abvActual = ogActual && fgActual ? (ogActual - fgActual) * 131.25 : null
+    const ogTarget = normalizeGravity(form.ogTarget)
+    const ogActual = normalizeGravity(form.ogActual)
+    const fgActual = normalizeGravity(form.fgActual)
+    const abvActual = ogActual && fgActual ? parseFloat(((ogActual - fgActual) * 131.25).toFixed(2)) : null
 
     addBrewEntry({
       id: Date.now(),
       ...form,
-      ogTarget: parseFloat(form.ogTarget) || null,
-      ogActual: ogActual || null,
-      fgActual: fgActual || null,
+      ogTarget,
+      ogActual,
+      fgActual,
       abvActual,
     })
 
@@ -407,8 +424,8 @@ export default function BrewLogPage({ onClose }) {
                   <label className="form-label">OG Objetivo</label>
                   <input
                     className="form-input"
-                    type="number"
-                    step="0.001"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="1.050"
                     value={form.ogTarget}
                     onChange={e => updateForm('ogTarget', e.target.value)}
@@ -418,8 +435,8 @@ export default function BrewLogPage({ onClose }) {
                   <label className="form-label">OG Real (medido)</label>
                   <input
                     className="form-input"
-                    type="number"
-                    step="0.001"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="1.048"
                     value={form.ogActual}
                     onChange={e => updateForm('ogActual', e.target.value)}
@@ -431,8 +448,8 @@ export default function BrewLogPage({ onClose }) {
                 <label className="form-label">FG Real (medido)</label>
                 <input
                   className="form-input"
-                  type="number"
-                  step="0.001"
+                  type="text"
+                  inputMode="decimal"
                   placeholder="1.010"
                   value={form.fgActual}
                   onChange={e => updateForm('fgActual', e.target.value)}
@@ -528,19 +545,19 @@ export default function BrewLogPage({ onClose }) {
                   {entry.ogTarget && (
                     <div className="info-item">
                       <div className="info-label">OG objetivo</div>
-                      <div className="info-value">{entry.ogTarget.toFixed(3)}</div>
+                      <div className="info-value">{displayGravity(entry.ogTarget)}</div>
                     </div>
                   )}
                   {entry.ogActual && (
                     <div className="info-item">
                       <div className="info-label">OG real</div>
-                      <div className="info-value">{entry.ogActual.toFixed(3)}</div>
+                      <div className="info-value">{displayGravity(entry.ogActual)}</div>
                     </div>
                   )}
                   {entry.fgActual && (
                     <div className="info-item">
                       <div className="info-label">FG real</div>
-                      <div className="info-value">{entry.fgActual.toFixed(3)}</div>
+                      <div className="info-value">{displayGravity(entry.fgActual)}</div>
                     </div>
                   )}
                   {abv && (

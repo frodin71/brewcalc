@@ -102,6 +102,13 @@ export function AppProvider({ children }) {
     syncCloud({ saved_recipes: updated })
   }
 
+  const updateRecipe = (i, changes) => {
+    const updated = savedRecipes.map((r, idx) => idx === i ? { ...r, ...changes } : r)
+    setSavedRecipes(updated)
+    localStorage.setItem(LS_RECIPES, JSON.stringify(updated))
+    syncCloud({ saved_recipes: updated })
+  }
+
   const deleteRecipe = (i) => {
     const updated = savedRecipes.filter((_, idx) => idx !== i)
     setSavedRecipes(updated)
@@ -160,7 +167,7 @@ export function AppProvider({ children }) {
     <AppContext.Provider value={{
       units, toggleUnits,
       notes, saveNotes,
-      savedRecipes, saveRecipe, deleteRecipe,
+      savedRecipes, saveRecipe, updateRecipe, deleteRecipe,
       brewLog, addBrewEntry, updateBrewEntry, deleteBrewEntry,
       installPrompt, triggerInstall,
       user, signIn, signUp, signOut, signInWithGoogle,

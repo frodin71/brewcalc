@@ -24,20 +24,21 @@ export default function NumInput({
     }
   }, [value])
 
+  const normalize = (raw) => raw.replace(',', '.')
+
   const handleChange = (e) => {
     const raw = e.target.value
     setDisplay(raw)
-    const parsed = parseFloat(raw)
-    if (!isNaN(parsed) && raw.trim() !== '') {
+    const parsed = parseFloat(normalize(raw))
+    if (!isNaN(parsed) && normalize(raw).trim() !== '') {
       const clamped = clamp(parsed, min, max)
       onChange(clamped)
     }
   }
 
   const handleBlur = () => {
-    const parsed = parseFloat(display)
+    const parsed = parseFloat(normalize(display))
     if (isNaN(parsed) || display.trim() === '') {
-      // Restaura al último valor válido
       setDisplay(String(value))
     } else {
       const clamped = clamp(parsed, min, max)
@@ -48,15 +49,14 @@ export default function NumInput({
 
   return (
     <input
-      type="number"
+      type="text"
+      inputMode="decimal"
       className={className}
       value={display}
-      step={step}
       placeholder={placeholder}
       style={style}
       onChange={handleChange}
       onBlur={handleBlur}
-      inputMode="decimal"
     />
   )
 }

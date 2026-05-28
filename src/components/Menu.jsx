@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext'
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
 const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
 
-export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, onOpenNotes, onOpenAbout, onOpenRecipes, onOpenIOSTutorial }) {
+export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, onOpenNotes, onOpenAbout, onOpenRecipes, onOpenIOSTutorial, onOpenBrewLog }) {
   const { units, toggleUnits, installPrompt, triggerInstall } = useApp()
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, on
                 <div className="mode-toggle-desc">Toca para cambiar de sistema</div>
               </div>
             </div>
-            <div className={`toggle-switch ${units === 'imperial' ? 'on' : ''}`} style={{ '--on-color': '#4FC3F7' }}>
+            <div className={`toggle-switch ${units === 'imperial' ? 'on' : ''}`}>
               <div className="toggle-knob" />
             </div>
           </div>
@@ -93,6 +93,15 @@ export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, on
               <div>
                 <div className="menu-wiki-label">Recetas Guardadas</div>
                 <div className="menu-wiki-desc">Tus recetas anteriores</div>
+              </div>
+              <span className="menu-wiki-arrow">→</span>
+            </button>
+
+            <button className="menu-wiki-btn" onClick={() => { onClose(); onOpenBrewLog() }}>
+              <span className="menu-wiki-icon">📈</span>
+              <div>
+                <div className="menu-wiki-label">Bitácora de Elaboraciones</div>
+                <div className="menu-wiki-desc">Registro de tus lotes con OG, FG y notas</div>
               </div>
               <span className="menu-wiki-arrow">→</span>
             </button>

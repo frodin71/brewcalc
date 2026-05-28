@@ -74,7 +74,7 @@ Si no tienes molino, muchas tiendas de homebrewing muelen el grano al momento de
       },
       {
         title: 'Mash (Maceración)',
-        content: `Es el paso más importante del proceso. Mezclás los granos molidos con agua caliente y los dejás reposar ~60 minutos.
+        content: `Es el paso más importante del proceso. Mezcla los granos molidos con agua caliente y déjalos reposar ~60 minutos.
 
 ¿Qué pasa? Las enzimas del grano (alpha y beta amilasas) convierten el almidón en azúcares fermentables que la levadura después puede consumir.
 
@@ -91,14 +91,14 @@ Generalmente ~75°C para que al mezclar con el grano frío llegue a los 66–68�
         content: `Después del mash, el grano tiene azúcares atrapados. El sparge consiste en verter agua caliente (~76°C) sobre el grano para extraer esos azúcares restantes.
 
 Dos métodos:
-• Batch sparge: vacías el mash, agregas toda el agua de sparge, revuelves y volvés a drenar. Simple.
-• Fly sparge: vas vertiendo agua lentamente mientras drenás. Más eficiente pero más complejo.
+• Batch sparge: vacía el mash, agrega toda el agua de sparge, revuelve y vuelve a drenar. Simple.
+• Fly sparge: ve vertiendo agua lentamente mientras drenas. Más eficiente pero más complejo.
 
 El agua de sparge no debe pasar de 78°C o puedes extraer taninos astringentes del grano.`,
       },
       {
         title: 'Hervido',
-        content: `Hervís el mosto (líquido que extrajiste) durante 60–90 minutos. Durante el hervido:
+        content: `Hierves el mosto (líquido que extrajiste) durante 60–90 minutos. Durante el hervido:
 
 • Se esteriliza el mosto (matas bacterias)
 • Se evaporan compuestos indeseados (DMS, etc.)
@@ -148,7 +148,7 @@ Proceso:
 2. Mezcla suavemente con la cerveza (evita oxidar)
 3. Embotella rápido para no perder carbonatación
 4. Deja a temperatura ambiente 2 semanas
-5. Opcinal: cold crash 24h antes de abrir para que el sedimento se asiente
+5. Opcional: cold crash 24h antes de abrir para que el sedimento se asiente
 
 ⚠️ Nunca emboteltes antes de que la FG sea estable — el exceso de azúcar puede explotar las botellas.`,
       },
@@ -350,7 +350,7 @@ Disuelve todo el azúcar en ~200 mL de agua hervida, deja enfriar, mezcla suavem
       },
       {
         title: 'Carbonatación forzada (CO₂ externo)',
-        content: `Se usa principalmente con barriles (kegs). Conectás un cilindro de CO₂ al keg y presionás la cerveza.
+        content: `Se usa principalmente con barriles (kegs). Conectas un cilindro de CO₂ al keg y presionas la cerveza.
 
 Método rápido (shaking): 30–40 PSI, agitar 2–3 min, dejar reposar 24h. Riesgo de sobre-carbonatar.
 
@@ -428,8 +428,8 @@ El test definitivo: mide la densidad con 48 horas de diferencia. Si es exactamen
         title: 'La fermentación no arranca',
         content: `Si pasaron más de 24–48h y no hay actividad:
 
-1. Levadura muerta: la temperatura del mosto estaba muy alta (>35°C) al pitchear. Agregá levadura fresca.
-2. Temperatura muy baja: si está a <15°C, la levadura está dormida. Subí la temperatura.
+1. Levadura muerta: la temperatura del mosto estaba muy alta (>35°C) al pitchear. Agrega levadura fresca.
+2. Temperatura muy baja: si está a <15°C, la levadura está dormida. Sube la temperatura.
 3. El airlock no está sellado: el CO₂ puede escapar por otro lado. Igual puede estar fermentando.
 4. Levadura vieja: sobre todo en paquetes de levadura líquida vencida.
 
@@ -469,7 +469,7 @@ Prevención:
 ✅ Usar calculadora de priming (como esta app)
 ✅ Sanitizar todo correctamente
 
-Si sospechas sobre-carbonatación: abrí una botella de prueba en la pileta. Si explota con espuma, refrigerá todas inmediatamente (el frío reduce la presión) y consúmelas pronto.
+Si sospechas sobre-carbonatación: abre una botella de prueba en el fregadero. Si explota con espuma, refrigera todas inmediatamente (el frío reduce la presión) y consúmelas pronto.
 
 ⚠️ Nunca guardes botellas que podrían explotar en lugares calurosos.`,
       },

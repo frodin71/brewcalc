@@ -99,7 +99,7 @@ export default function BrewDayTimer({ recipe }) {
 
   const alertedHops = useRef(new Set())
   const intervalRef = useRef(null)
-  const steps       = useRef([])
+  const steps       = useRef(recipe ? buildSteps(recipe) : [])
 
   function initSteps(cfg) {
     steps.current = buildSteps(cfg)
@@ -110,12 +110,6 @@ export default function BrewDayTimer({ recipe }) {
     setRunning(false)
     setCurrentAlert(null)
   }
-
-  useEffect(() => {
-    if (recipe) {
-      initSteps(recipe)
-    }
-  }, [])
 
   useEffect(() => {
     if (phase !== 'running') return

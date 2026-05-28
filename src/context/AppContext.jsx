@@ -71,15 +71,16 @@ export function AppProvider({ children }) {
     }
   }
 
-  function syncCloud(overrides = {}) {
+  async function syncCloud(overrides = {}) {
     if (!user) return
-    supabase.from('user_data').upsert({
+    const { error } = await supabase.from('user_data').upsert({
       user_id:       user.id,
       notes:         overrides.notes         ?? localStorage.getItem(LS_NOTES) ?? '',
       saved_recipes: overrides.saved_recipes ?? JSON.parse(localStorage.getItem(LS_RECIPES) || '[]'),
       brew_log:      overrides.brew_log      ?? JSON.parse(localStorage.getItem(LS_LOG)     || '[]'),
       updated_at:    new Date().toISOString(),
     }, { onConflict: 'user_id' })
+    if (error) console.error('syncCloud error:', error)
   }
 
   // ── Local actions ──────────────────────────────────────────────────────────

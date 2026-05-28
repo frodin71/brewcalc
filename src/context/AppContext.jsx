@@ -116,6 +116,13 @@ export function AppProvider({ children }) {
     syncCloud({ brew_log: updated })
   }
 
+  const updateBrewEntry = (id, updates) => {
+    const updated = brewLog.map(e => e.id === id ? { ...e, ...updates } : e)
+    setBrewLog(updated)
+    localStorage.setItem(LS_LOG, JSON.stringify(updated))
+    syncCloud({ brew_log: updated })
+  }
+
   const deleteBrewEntry = (id) => {
     const updated = brewLog.filter(e => e.id !== id)
     setBrewLog(updated)
@@ -154,7 +161,7 @@ export function AppProvider({ children }) {
       units, toggleUnits,
       notes, saveNotes,
       savedRecipes, saveRecipe, deleteRecipe,
-      brewLog, addBrewEntry, deleteBrewEntry,
+      brewLog, addBrewEntry, updateBrewEntry, deleteBrewEntry,
       installPrompt, triggerInstall,
       user, signIn, signUp, signOut, signInWithGoogle,
     }}>

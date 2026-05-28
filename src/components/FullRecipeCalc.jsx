@@ -71,7 +71,7 @@ function guessStyle(og, ibu) {
 }
 
 export default function FullRecipeCalc({ onStartTimer }) {
-  const { addBrewEntry } = useApp()
+  const { addBrewEntry, saveRecipe } = useApp()
 
   const [recipeName,        setRecipeName]        = useState('')
   const [batchSize,         setBatchSize]          = useState(20)
@@ -89,6 +89,7 @@ export default function FullRecipeCalc({ onStartTimer }) {
   const [customAttenuation, setCustomAttenuation]  = useState(75)
   const [copied,            setCopied]             = useState(false)
   const [logSaved,          setLogSaved]           = useState(false)
+  const [recipeSaved,       setRecipeSaved]        = useState(false)
 
   const calc = useMemo(() => {
     const totalGrainKg = grains.reduce((s, g) => s + (parseFloat(g.kg) || 0), 0)
@@ -217,23 +218,54 @@ export default function FullRecipeCalc({ onStartTimer }) {
     })
   }
 
-  function handleSaveLog() {
+  function buildFullEntry() {
     const r = calc
-    addBrewEntry({
+    return {
       id: Date.now(),
       name: recipeName || `Receta ${batchSize}L`,
       date: new Date().toISOString().slice(0, 10),
       ogTarget: parseFloat(r.og.toFixed(3)),
-      ogActual: '',
-      fgActual: '',
+      ogActual: null,
+      fgActual: null,
       notes: '',
       abvEst: parseFloat(r.abvEst.toFixed(2)),
-      ibu: parseFloat(r.ibu.toFixed(0)),
+      fgEst: parseFloat(r.fgEst.toFixed(3)),
+      ibu: parseFloat(r.ibu.toFixed(1)),
       srm: parseFloat(r.srm.toFixed(1)),
       batchSize,
-    })
+      efficiency,
+      mashTemp,
+      mashDuration,
+      boilDuration,
+      yeast: YEASTS[yeastIdx].name,
+      grains: grains.filter(g => parseFloat(g.kg) > 0).map(g => ({
+        name: GRAINS[g.type].name,
+        kg: parseFloat(g.kg),
+      })),
+      hops: hops.filter(h => parseFloat(h.grams) > 0).map(h => ({
+        name: HOPS[h.variety].name,
+        grams: parseFloat(h.grams),
+        time: parseFloat(h.time) || 0,
+      })),
+      strikeTemp: parseFloat(r.strikeTemp.toFixed(1)),
+      strikeVol: parseFloat(r.strikeVol.toFixed(1)),
+      spargeVol: parseFloat(r.spargeVol.toFixed(1)),
+      carbTarget,
+      sugarGrams: parseFloat(r.sugarGrams.toFixed(0)),
+    }
+  }
+
+  function handleSaveLog() {
+    addBrewEntry(buildFullEntry())
     setLogSaved(true)
     setTimeout(() => setLogSaved(false), 2000)
+  }
+
+  function handleSaveRecipe() {
+    const entry = buildFullEntry()
+    saveRecipe({ ...entry })
+    setRecipeSaved(true)
+    setTimeout(() => setRecipeSaved(false), 2000)
   }
 
   const { totalGrainKg, og, fgEst, abvEst, ibu, srm, srmColor, strikeTemp, strikeVol, spargeVol, residualCO2, sugarGrams, styleGuess } = calc
@@ -532,6 +564,13 @@ export default function FullRecipeCalc({ onStartTimer }) {
               onClick={() => onStartTimer && onStartTimer(buildRecipeObj())}
             >
               ⏱️ Iniciar Brew Day
+            </button>
+            <button
+              className={`action-btn${recipeSaved ? ' success' : ''}`}
+              style={{ background: 'var(--color-green)', color: '#000', fontWeight: 700 }}
+              onClick={handleSaveRecipe}
+            >
+              {recipeSaved ? '✅ Receta guardada' : '💾 Guardar receta'}
             </button>
             <button
               className={`action-btn${logSaved ? ' success' : ''}`}

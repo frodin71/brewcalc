@@ -1,18 +1,13 @@
 import { useState } from 'react'
-import FullRecipeCalc from './FullRecipeCalc'
 import BrewDayTimer from './BrewDayTimer'
+import RecipeCalc from './RecipeCalc'
+import EasyRecipeCalc from './EasyRecipeCalc'
 import StrikeWaterCalc from './StrikeWaterCalc'
 import ColorCalc from './ColorCalc'
 import HydrometerCalc from './HydrometerCalc'
 import WaterCalc from './WaterCalc'
 
 const FEATURED = [
-  {
-    id: 'full-recipe',
-    emoji: '🍺',
-    title: 'Receta Completa',
-    desc: 'OG + IBU + SRM + ABV + agua + carbonatación todo junto',
-  },
   {
     id: 'timer',
     emoji: '⏱️',
@@ -22,6 +17,12 @@ const FEATURED = [
 ]
 
 const CALCS = [
+  {
+    id: 'recipe-malta',
+    emoji: '🌾',
+    title: 'Calculadora de OG',
+    desc: 'Estimá la densidad original según tus maltas',
+  },
   {
     id: 'strike',
     emoji: '🌡️',
@@ -56,29 +57,11 @@ export default function MoreCalcs({ easyMode }) {
   const [activeId,    setActiveId]    = useState(null)
   const [timerRecipe, setTimerRecipe] = useState(null)
 
-  const regular = CALCS.find(c => c.id === activeId)
-
-  if (activeId === 'full-recipe') {
-    return (
-      <div>
-        <button className="back-btn" onClick={() => setActiveId(null)}>
-          ← Calculadoras
-        </button>
-        <FullRecipeCalc
-          onStartTimer={(recipe) => {
-            setTimerRecipe(recipe)
-            setActiveId('timer')
-          }}
-        />
-      </div>
-    )
-  }
-
   if (activeId === 'timer') {
     return (
       <div>
         <button className="back-btn" onClick={() => { setActiveId(null); setTimerRecipe(null) }}>
-          ← Calculadoras
+          ← Otras calculadoras
         </button>
         <div className="calc-page-title card">
           <span style={{ fontSize: '1.6rem' }}>⏱️</span>
@@ -89,6 +72,22 @@ export default function MoreCalcs({ easyMode }) {
     )
   }
 
+  if (activeId === 'recipe-malta') {
+    return (
+      <div>
+        <button className="back-btn" onClick={() => setActiveId(null)}>
+          ← Otras calculadoras
+        </button>
+        <div className="calc-page-title card">
+          <span style={{ fontSize: '1.6rem' }}>🌾</span>
+          <span style={{ fontWeight: 700, fontSize: '1rem' }}>Calculadora de OG</span>
+        </div>
+        {easyMode ? <EasyRecipeCalc /> : <RecipeCalc />}
+      </div>
+    )
+  }
+
+  const regular = CALCS.find(c => c.id === activeId && c.component)
   if (regular) {
     const Comp = regular.component
     return (

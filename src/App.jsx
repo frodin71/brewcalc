@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 import { AppProvider } from './context/AppContext'
 import { useApp } from './context/AppContext'
 import AuthModal from './components/AuthModal'
-import RecipeCalc from './components/RecipeCalc'
+import FullRecipeCalc from './components/FullRecipeCalc'
+import BrewDayTimer from './components/BrewDayTimer'
 import CarbonationCalc from './components/CarbonationCalc'
 import HopCalc from './components/HopCalc'
 import AbvCalc from './components/AbvCalc'
-import EasyRecipeCalc from './components/EasyRecipeCalc'
 import EasyCarbonationCalc from './components/EasyCarbonationCalc'
 import EasyHopCalc from './components/EasyHopCalc'
 import EasyAbvCalc from './components/EasyAbvCalc'
@@ -20,7 +20,7 @@ import IOSTutorialPage from './components/IOSTutorialPage'
 import BrewLogPage from './components/BrewLogPage'
 
 const TABS = [
-  { id: 'recipe',      label: 'Receta',   icon: '🌾' },
+  { id: 'recipe',      label: 'Receta',   icon: '🍺' },
   { id: 'abv',         label: 'ABV',      icon: '📊' },
   { id: 'carbonation', label: 'Carbona.', icon: '🫧' },
   { id: 'hops',        label: 'Lúpulos',  icon: '🌿' },
@@ -34,10 +34,12 @@ function AppInner() {
   const [easyMode, setEasyMode]     = useState(true)
   const [overlay, setOverlay]       = useState(null) // 'wiki' | 'notes' | 'about' | 'recipes' | 'ios-tutorial' | 'brewlog'
   const [showAuth, setShowAuth]     = useState(false)
+  const [timerRecipe, setTimerRecipe] = useState(null)
 
   useEffect(() => { if (user) setShowAuth(false) }, [user])
 
   const toggleEasy = () => setEasyMode(v => !v)
+  const handleTabChange = (id) => { setActiveTab(id); if (id !== 'recipe') setTimerRecipe(null) }
   const openOverlay  = (name) => setOverlay(name)
   const closeOverlay = () => setOverlay(null)
 
@@ -77,7 +79,14 @@ function AppInner() {
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
 
       <main className="app-main">
-        {activeTab === 'recipe'      && (easyMode ? <EasyRecipeCalc />      : <RecipeCalc />)}
+        {activeTab === 'recipe' && (
+          timerRecipe
+            ? <div>
+                <button className="back-btn" onClick={() => setTimerRecipe(null)}>← Receta Completa</button>
+                <BrewDayTimer recipe={timerRecipe} />
+              </div>
+            : <FullRecipeCalc onStartTimer={setTimerRecipe} />
+        )}
         {activeTab === 'abv'         && (easyMode ? <EasyAbvCalc />         : <AbvCalc />)}
         {activeTab === 'carbonation' && (easyMode ? <EasyCarbonationCalc /> : <CarbonationCalc />)}
         {activeTab === 'hops'        && (easyMode ? <EasyHopCalc />         : <HopCalc />)}
@@ -89,7 +98,7 @@ function AppInner() {
           <button
             key={tab.id}
             className={`nav-btn ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             aria-label={tab.label}
           >
             <span className="nav-icon">{tab.icon}</span>

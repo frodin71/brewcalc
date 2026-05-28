@@ -5,12 +5,16 @@ const AppContext = createContext(null)
 const LS_UNITS   = 'brewcalc_units'
 const LS_NOTES   = 'brewcalc_notes'
 const LS_RECIPES = 'brewcalc_recipes'
+const LS_LOG     = 'brewcalc_log'
 
 export function AppProvider({ children }) {
   const [units,       setUnits]       = useState(() => localStorage.getItem(LS_UNITS)   || 'metric')
   const [notes,       setNotes]       = useState(() => localStorage.getItem(LS_NOTES)   || '')
   const [savedRecipes, setSavedRecipes] = useState(() => {
     try { return JSON.parse(localStorage.getItem(LS_RECIPES)) || [] } catch { return [] }
+  })
+  const [brewLog, setBrewLog] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(LS_LOG)) || [] } catch { return [] }
   })
   const [installPrompt, setInstallPrompt] = useState(null)
 
@@ -43,6 +47,18 @@ export function AppProvider({ children }) {
     localStorage.setItem(LS_RECIPES, JSON.stringify(updated))
   }
 
+  const addBrewEntry = (entry) => {
+    const updated = [entry, ...brewLog].slice(0, 50)
+    setBrewLog(updated)
+    localStorage.setItem(LS_LOG, JSON.stringify(updated))
+  }
+
+  const deleteBrewEntry = (id) => {
+    const updated = brewLog.filter(e => e.id !== id)
+    setBrewLog(updated)
+    localStorage.setItem(LS_LOG, JSON.stringify(updated))
+  }
+
   const triggerInstall = async () => {
     if (!installPrompt) return false
     installPrompt.prompt()
@@ -56,6 +72,7 @@ export function AppProvider({ children }) {
       units, toggleUnits,
       notes, saveNotes,
       savedRecipes, saveRecipe, deleteRecipe,
+      brewLog, addBrewEntry, deleteBrewEntry,
       installPrompt, triggerInstall,
     }}>
       {children}

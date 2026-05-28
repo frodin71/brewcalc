@@ -4,8 +4,8 @@ import { useApp } from '../context/AppContext'
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
 const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
 
-export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, onOpenNotes, onOpenAbout, onOpenRecipes, onOpenIOSTutorial, onOpenBrewLog }) {
-  const { units, toggleUnits, installPrompt, triggerInstall } = useApp()
+export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, onOpenNotes, onOpenAbout, onOpenRecipes, onOpenIOSTutorial, onOpenBrewLog, onOpenAuth }) {
+  const { units, toggleUnits, installPrompt, triggerInstall, user, signOut } = useApp()
 
   useEffect(() => {
     if (open) document.body.style.overflow = 'hidden'
@@ -25,6 +25,46 @@ export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, on
         <div className="menu-header">
           <span className="menu-title">Menú</span>
           <button className="menu-close" onClick={onClose}>✕</button>
+        </div>
+
+        {/* Cuenta */}
+        <div className="menu-section">
+          <div className="menu-section-title">Cuenta</div>
+          {user ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{
+                padding: '10px 12px',
+                background: 'var(--bg-card-2)',
+                borderRadius: '10px',
+                fontSize: '0.82rem',
+                color: 'var(--color-muted)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}>
+                <span>✅</span>
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {user.user_metadata?.full_name || user.email}
+                </span>
+              </div>
+              <button className="menu-wiki-btn" onClick={async () => { await signOut(); onClose() }}>
+                <span className="menu-wiki-icon">🚪</span>
+                <div>
+                  <div className="menu-wiki-label">Cerrar sesión</div>
+                  <div className="menu-wiki-desc">Tus datos quedan en la nube</div>
+                </div>
+              </button>
+            </div>
+          ) : (
+            <button className="menu-wiki-btn" onClick={() => { onClose(); onOpenAuth() }}>
+              <span className="menu-wiki-icon">☁️</span>
+              <div>
+                <div className="menu-wiki-label">Iniciar sesión</div>
+                <div className="menu-wiki-desc">Sincroniza notas, recetas y bitácora</div>
+              </div>
+              <span className="menu-wiki-arrow">→</span>
+            </button>
+          )}
         </div>
 
         {/* Modo fácil / avanzado */}

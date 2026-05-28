@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AppProvider } from './context/AppContext'
+import { useApp } from './context/AppContext'
+import AuthModal from './components/AuthModal'
 import RecipeCalc from './components/RecipeCalc'
 import CarbonationCalc from './components/CarbonationCalc'
 import HopCalc from './components/HopCalc'
@@ -26,10 +28,14 @@ const TABS = [
 ]
 
 function AppInner() {
+  const { user } = useApp()
   const [activeTab, setActiveTab]   = useState('recipe')
   const [menuOpen, setMenuOpen]     = useState(false)
   const [easyMode, setEasyMode]     = useState(true)
   const [overlay, setOverlay]       = useState(null) // 'wiki' | 'notes' | 'about' | 'recipes' | 'ios-tutorial' | 'brewlog'
+  const [showAuth, setShowAuth]     = useState(false)
+
+  useEffect(() => { if (user) setShowAuth(false) }, [user])
 
   const toggleEasy = () => setEasyMode(v => !v)
   const openOverlay  = (name) => setOverlay(name)
@@ -59,6 +65,7 @@ function AppInner() {
         onOpenRecipes={()    => openOverlay('recipes')}
         onOpenIOSTutorial={() => openOverlay('ios-tutorial')}
         onOpenBrewLog={() => openOverlay('brewlog')}
+        onOpenAuth={() => { setMenuOpen(false); setShowAuth(true) }}
       />
 
       {overlay === 'wiki'         && <WikiPage         onClose={closeOverlay} />}
@@ -67,6 +74,7 @@ function AppInner() {
       {overlay === 'recipes'      && <SavedRecipesPage onClose={closeOverlay} />}
       {overlay === 'ios-tutorial' && <IOSTutorialPage  onClose={closeOverlay} />}
       {overlay === 'brewlog'      && <BrewLogPage       onClose={closeOverlay} />}
+      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
 
       <main className="app-main">
         {activeTab === 'recipe'      && (easyMode ? <EasyRecipeCalc />      : <RecipeCalc />)}

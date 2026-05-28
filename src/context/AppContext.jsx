@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
 
 const AppContext = createContext(null)
 
@@ -8,8 +9,8 @@ const LS_RECIPES = 'brewcalc_recipes'
 const LS_LOG     = 'brewcalc_log'
 
 export function AppProvider({ children }) {
-  const [units,       setUnits]       = useState(() => localStorage.getItem(LS_UNITS)   || 'metric')
-  const [notes,       setNotes]       = useState(() => localStorage.getItem(LS_NOTES)   || '')
+  const [units,        setUnits]        = useState(() => localStorage.getItem(LS_UNITS)   || 'metric')
+  const [notes,        setNotes]        = useState(() => localStorage.getItem(LS_NOTES)   || '')
   const [savedRecipes, setSavedRecipes] = useState(() => {
     try { return JSON.parse(localStorage.getItem(LS_RECIPES)) || [] } catch { return [] }
   })
@@ -17,13 +18,71 @@ export function AppProvider({ children }) {
     try { return JSON.parse(localStorage.getItem(LS_LOG)) || [] } catch { return [] }
   })
   const [installPrompt, setInstallPrompt] = useState(null)
+  const [user,          setUser]          = useState(null)
 
+  // ── Auth state listener ────────────────────────────────────────────────────
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user)
+        loadUserData(session.user.id)
+      }
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+      if (session?.user) loadUserData(session.user.id)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  // ── PWA install prompt ─────────────────────────────────────────────────────
   useEffect(() => {
     const handler = (e) => { e.preventDefault(); setInstallPrompt(e) }
     window.addEventListener('beforeinstallprompt', handler)
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
 
+  // ── Cloud helpers ──────────────────────────────────────────────────────────
+  async function loadUserData(userId) {
+    const { data } = await supabase
+      .from('user_data')
+      .select('*')
+      .eq('user_id', userId)
+      .single()
+
+    if (data) {
+      setNotes(data.notes || '')
+      setSavedRecipes(data.saved_recipes || [])
+      setBrewLog(data.brew_log || [])
+      localStorage.setItem(LS_NOTES,   data.notes || '')
+      localStorage.setItem(LS_RECIPES, JSON.stringify(data.saved_recipes || []))
+      localStorage.setItem(LS_LOG,     JSON.stringify(data.brew_log || []))
+    } else {
+      // First login — upload local data to cloud
+      await supabase.from('user_data').upsert({
+        user_id:       userId,
+        notes:         localStorage.getItem(LS_NOTES) || '',
+        saved_recipes: JSON.parse(localStorage.getItem(LS_RECIPES) || '[]'),
+        brew_log:      JSON.parse(localStorage.getItem(LS_LOG)     || '[]'),
+        updated_at:    new Date().toISOString(),
+      })
+    }
+  }
+
+  function syncCloud(overrides = {}) {
+    if (!user) return
+    supabase.from('user_data').upsert({
+      user_id:       user.id,
+      notes:         overrides.notes         ?? localStorage.getItem(LS_NOTES) ?? '',
+      saved_recipes: overrides.saved_recipes ?? JSON.parse(localStorage.getItem(LS_RECIPES) || '[]'),
+      brew_log:      overrides.brew_log      ?? JSON.parse(localStorage.getItem(LS_LOG)     || '[]'),
+      updated_at:    new Date().toISOString(),
+    }, { onConflict: 'user_id' })
+  }
+
+  // ── Local actions ──────────────────────────────────────────────────────────
   const toggleUnits = () => {
     const next = units === 'metric' ? 'imperial' : 'metric'
     setUnits(next)
@@ -33,30 +92,35 @@ export function AppProvider({ children }) {
   const saveNotes = (text) => {
     setNotes(text)
     localStorage.setItem(LS_NOTES, text)
+    syncCloud({ notes: text })
   }
 
   const saveRecipe = (recipe) => {
     const updated = [{ ...recipe, savedAt: new Date().toLocaleDateString('es') }, ...savedRecipes].slice(0, 20)
     setSavedRecipes(updated)
     localStorage.setItem(LS_RECIPES, JSON.stringify(updated))
+    syncCloud({ saved_recipes: updated })
   }
 
   const deleteRecipe = (i) => {
     const updated = savedRecipes.filter((_, idx) => idx !== i)
     setSavedRecipes(updated)
     localStorage.setItem(LS_RECIPES, JSON.stringify(updated))
+    syncCloud({ saved_recipes: updated })
   }
 
   const addBrewEntry = (entry) => {
     const updated = [entry, ...brewLog].slice(0, 50)
     setBrewLog(updated)
     localStorage.setItem(LS_LOG, JSON.stringify(updated))
+    syncCloud({ brew_log: updated })
   }
 
   const deleteBrewEntry = (id) => {
     const updated = brewLog.filter(e => e.id !== id)
     setBrewLog(updated)
     localStorage.setItem(LS_LOG, JSON.stringify(updated))
+    syncCloud({ brew_log: updated })
   }
 
   const triggerInstall = async () => {
@@ -67,6 +131,24 @@ export function AppProvider({ children }) {
     return outcome === 'accepted'
   }
 
+  // ── Auth functions ─────────────────────────────────────────────────────────
+  const signIn = (email, password) =>
+    supabase.auth.signInWithPassword({ email, password })
+
+  const signUp = (email, password) =>
+    supabase.auth.signUp({ email, password })
+
+  const signOut = async () => {
+    await supabase.auth.signOut()
+    setUser(null)
+  }
+
+  const signInWithGoogle = () =>
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.href },
+    })
+
   return (
     <AppContext.Provider value={{
       units, toggleUnits,
@@ -74,6 +156,7 @@ export function AppProvider({ children }) {
       savedRecipes, saveRecipe, deleteRecipe,
       brewLog, addBrewEntry, deleteBrewEntry,
       installPrompt, triggerInstall,
+      user, signIn, signUp, signOut, signInWithGoogle,
     }}>
       {children}
     </AppContext.Provider>

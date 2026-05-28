@@ -40,7 +40,7 @@ export default function Menu({ open, onClose, easyMode, onToggle, onOpenWiki, on
                 </div>
               </div>
             </div>
-            <div className={`toggle-switch ${easyMode ? 'on' : ''}`}>
+            <div className={`toggle-switch ${!easyMode ? 'on' : ''}`}>
               <div className="toggle-knob" />
             </div>
           </div>

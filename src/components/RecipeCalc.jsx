@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-import { useApp } from '../context/AppContext'
 import NumInput from './NumInput'
 
 const GRAIN_TYPES = [
@@ -50,12 +49,10 @@ function getOGColor(og) {
 }
 
 export default function RecipeCalc() {
-  const { saveRecipe } = useApp()
   const [grains, setGrains]         = useState([{ type: 0, kg: '' }, { type: 5, kg: '' }])
   const [batchSize, setBatchSize]   = useState(20)
   const [efficiency, setEfficiency] = useState(75)
   const [copied, setCopied]         = useState(false)
-  const [savedMsg, setSavedMsg]     = useState(false)
 
   const addGrain    = () => setGrains([...grains, { type: 0, kg: '' }])
   const removeGrain = (i) => setGrains(grains.filter((_, idx) => idx !== i))
@@ -89,19 +86,6 @@ export default function RecipeCalc() {
     navigator.clipboard?.writeText(lines.join('\n'))
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
-  }
-
-  const handleSaveRecipe = () => {
-    saveRecipe({
-      name: `Receta ${batchSize}L — OG ${og.toFixed(3)}`,
-      batchSize, efficiency,
-      og: og.toFixed(3),
-      grains: grains.filter(g => parseFloat(g.kg) > 0).map(g => ({
-        name: GRAIN_TYPES[g.type].name, kg: g.kg,
-      })),
-    })
-    setSavedMsg(true)
-    setTimeout(() => setSavedMsg(false), 2500)
   }
 
   return (
@@ -206,14 +190,9 @@ export default function RecipeCalc() {
 
       {totalKg > 0 && (
         <div className="card">
-          <div className="action-btn-row">
-            <button className={`action-btn ${copied ? 'success' : ''}`} onClick={handleCopyList}>
-              {copied ? '✓ Copiado' : '📋 Lista de compras'}
-            </button>
-            <button className={`action-btn ${savedMsg ? 'success' : ''}`} onClick={handleSaveRecipe}>
-              {savedMsg ? '✓ Guardada' : '💾 Guardar receta'}
-            </button>
-          </div>
+          <button className={`action-btn ${copied ? 'success' : ''}`} style={{ width: '100%' }} onClick={handleCopyList}>
+            {copied ? '✓ Copiado' : '📋 Lista de compras'}
+          </button>
         </div>
       )}
 

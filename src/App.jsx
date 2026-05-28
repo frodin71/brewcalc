@@ -15,6 +15,7 @@ import NotesPage from './components/NotesPage'
 import AboutPage from './components/AboutPage'
 import SavedRecipesPage from './components/SavedRecipesPage'
 import IOSTutorialPage from './components/IOSTutorialPage'
+import BrewLogPage from './components/BrewLogPage'
 
 const TABS = [
   { id: 'recipe',      label: 'Receta',   icon: '🌾' },
@@ -27,8 +28,8 @@ const TABS = [
 function AppInner() {
   const [activeTab, setActiveTab]   = useState('recipe')
   const [menuOpen, setMenuOpen]     = useState(false)
-  const [easyMode, setEasyMode]     = useState(false)
-  const [overlay, setOverlay]       = useState(null) // 'wiki' | 'notes' | 'about' | 'recipes' | 'ios-tutorial'
+  const [easyMode, setEasyMode]     = useState(true)
+  const [overlay, setOverlay]       = useState(null) // 'wiki' | 'notes' | 'about' | 'recipes' | 'ios-tutorial' | 'brewlog'
 
   const toggleEasy = () => setEasyMode(v => !v)
   const openOverlay  = (name) => setOverlay(name)
@@ -57,6 +58,7 @@ function AppInner() {
         onOpenAbout={()      => openOverlay('about')}
         onOpenRecipes={()    => openOverlay('recipes')}
         onOpenIOSTutorial={() => openOverlay('ios-tutorial')}
+        onOpenBrewLog={() => openOverlay('brewlog')}
       />
 
       {overlay === 'wiki'         && <WikiPage         onClose={closeOverlay} />}
@@ -64,6 +66,7 @@ function AppInner() {
       {overlay === 'about'        && <AboutPage        onClose={closeOverlay} />}
       {overlay === 'recipes'      && <SavedRecipesPage onClose={closeOverlay} />}
       {overlay === 'ios-tutorial' && <IOSTutorialPage  onClose={closeOverlay} />}
+      {overlay === 'brewlog'      && <BrewLogPage       onClose={closeOverlay} />}
 
       <main className="app-main">
         {activeTab === 'recipe'      && (easyMode ? <EasyRecipeCalc />      : <RecipeCalc />)}

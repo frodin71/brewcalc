@@ -90,9 +90,12 @@ export default function BrewDayTimer({ recipe }) {
   const [running,     setRunning]    = useState(false)
   const [currentAlert, setCurrentAlert] = useState(null)
 
-  const [manualMash,  setManualMash]  = useState(60)
-  const [manualBoil,  setManualBoil]  = useState(60)
-  const [manualHops,  setManualHops]  = useState([])
+  const [manualMash,     setManualMash]     = useState(60)
+  const [manualBoil,     setManualBoil]     = useState(60)
+  const [manualBatch,    setManualBatch]    = useState(20)
+  const [manualGrainKg,  setManualGrainKg]  = useState(4)
+  const [manualMashTemp, setManualMashTemp] = useState(67)
+  const [manualHops,     setManualHops]     = useState([])
 
   const alertedHops = useRef(new Set())
   const intervalRef = useRef(null)
@@ -169,11 +172,21 @@ export default function BrewDayTimer({ recipe }) {
   }
 
   function handleStart() {
+    const ratio = 3.0
+    const strikeVol = manualGrainKg * ratio
+    const strikeTemp = (0.41 / ratio) * (manualMashTemp - 20) + manualMashTemp
+    const grainAbsorption = manualGrainKg * 0.8
+    const preBoilVol = manualBatch * 1.1
+    const spargeVol = Math.max(0, preBoilVol + grainAbsorption - strikeVol)
     const cfg = {
       mashDuration: manualMash,
       boilDuration: manualBoil,
       hops: manualHops,
-      mashTemp: 67,
+      mashTemp: manualMashTemp,
+      totalGrainKg: manualGrainKg,
+      strikeVol,
+      strikeTemp,
+      spargeVol,
     }
     initSteps(cfg)
     setPhase('running')
@@ -208,10 +221,26 @@ export default function BrewDayTimer({ recipe }) {
       <div>
         <div className="card">
           <div className="card-title">⏱️ Brew Day Timer</div>
-          <p className="card-desc">Configura los tiempos para comenzar el asistente de elaboración.</p>
-          <div className="form-group">
-            <label className="form-label">Duración del mash (min)</label>
-            <NumInput value={manualMash} min={1} max={120} onChange={setManualMash} />
+          <p className="card-desc">Completa los datos de tu lote para que el asistente muestre los volúmenes correctos.</p>
+          <div className="form-row-2">
+            <div className="form-group">
+              <label className="form-label">Volumen final (L)</label>
+              <NumInput value={manualBatch} min={1} max={500} onChange={setManualBatch} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Total de grano (kg)</label>
+              <NumInput value={manualGrainKg} min={0} max={50} onChange={setManualGrainKg} />
+            </div>
+          </div>
+          <div className="form-row-2">
+            <div className="form-group">
+              <label className="form-label">Temp. de mash (°C)</label>
+              <NumInput value={manualMashTemp} min={60} max={75} onChange={setManualMashTemp} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Duración del mash (min)</label>
+              <NumInput value={manualMash} min={1} max={120} onChange={setManualMash} />
+            </div>
           </div>
           <div className="form-group">
             <label className="form-label">Duración del hervor (min)</label>
